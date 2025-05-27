@@ -1,0 +1,41 @@
+{
+  "name": "banking-service",
+  "version": "1.0.0",
+  "description": "Banking service",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts",
+    "format": "prettier --write \"src/**/*.{js,ts,json}\"",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.7.1",
+    "bullmq": "^4.15.2",
+    "decimal.js": "^10.4.3",
+    "express": "^4.18.2",
+    "prisma": "^5.7.1",
+    "redis": "^5.1.0",
+    "uuid": "^9.0.1",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.8",
+    "@types/node": "^20.10.5",
+    "@types/uuid": "^9.0.7",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
+    "eslint": "^9.27.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  },
+  "prisma": {
+    "schema": "src/models/schema.prisma"
+  }
+}
