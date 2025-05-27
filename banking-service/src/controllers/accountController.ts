@@ -28,7 +28,7 @@ export class AccountController {
       const { accountId } = req.params;
       const { amount } = req.body;
       const result = await this.accountService.deposit({ accountId, amount });
-      res.json({
+      res.status(200).json({
         success: true,
         data: result,
         message: result.message,
@@ -43,7 +43,7 @@ export class AccountController {
       const { accountId } = req.params;
       const { amount } = req.body;
       const result = await this.accountService.withdraw({ accountId, amount });
-      res.json({
+      res.status(200).json({
         success: true,
         data: result,
         message: result.message,
@@ -61,7 +61,7 @@ export class AccountController {
         toAccountId,
         amount,
       });
-      res.json({
+      res.status(200).json({
         success: true,
         data: result,
         message: result.message,
@@ -75,7 +75,7 @@ export class AccountController {
     try {
       const { accountId } = req.params;
       const balance = await this.accountService.getBalance(accountId);
-      res.json({
+      res.status(200).json({
         success: true,
         data: balance,
         message: "Balance retrieved successfully",
@@ -88,7 +88,7 @@ export class AccountController {
   async getAllAccounts(req: Request, res: Response) {
     try {
       const accounts = await this.accountService.getAllAccounts();
-      res.json({
+      res.status(200).json({
         success: true,
         data: accounts,
         message: "Accounts retrieved successfully",
@@ -101,7 +101,7 @@ export class AccountController {
   private handleError(error: unknown, res: Response) {
     logger.error("Controller error", { error });
     if (error instanceof BankingError) {
-      res.status(error.statusCode).json({
+      res.status(error.statusCode || 400).json({
         success: false,
         error: {
           code: error.code,

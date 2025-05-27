@@ -1,5 +1,4 @@
 import { Worker } from "bullmq";
-import Redis from "ioredis";
 import { redisClient } from "../config/redis";
 import { AccountService } from "../services/accountService";
 import { TransactionRepository } from "../repositories/transactionRepository";
@@ -15,7 +14,6 @@ export class TransactionWorker {
     private accountService: AccountService,
     private transactionRepo: TransactionRepository,
   ) {
-    const redis = new Redis(process.env.REDIS_URL || "redis://localhost:6379");
     this.worker = new Worker(
       "transaction-processing",
       async (job) => this.processJob(job),
@@ -28,7 +26,9 @@ export class TransactionWorker {
         },
       },
     );
+  }
 
+  public start() {
     this.setupEventListeners();
   }
 
@@ -80,13 +80,6 @@ export class TransactionWorker {
     );
 
     await this.transactionRepo.completeTransaction(transactionId);
-
-    if (transaction.description?.includes("Initial")) {
-      await sendNotification(
-        transaction.toAccountId,
-        `Deposit of ${transaction.amount} received`,
-      );
-    }
   }
 
   private async processWithdrawal(transactionId: string) {
@@ -111,7 +104,7 @@ export class TransactionWorker {
 
     await this.transactionRepo.completeTransaction(transactionId);
 
-    await sendNotification(
+    sendNotification(
       transaction.fromAccountId,
       `Withdrawal of ${transaction.amount} processed`,
     );
@@ -147,16 +140,14 @@ export class TransactionWorker {
 
     await this.transactionRepo.completeTransaction(transactionId);
 
-    await Promise.all([
-      sendNotification(
-        transaction.fromAccountId,
-        `Transfer of ${transaction.amount} to ${transaction.toAccount.accountNumber}`,
-      ),
-      sendNotification(
-        transaction.toAccountId,
-        `Transfer of ${transaction.amount} from ${transaction.fromAccount.accountNumber}`,
-      ),
-    ]);
+    sendNotification(
+      transaction.fromAccountId,
+      `Transfer of ${transaction.amount} to ${transaction.toAccount.accountNumber}`,
+    );
+    sendNotification(
+      transaction.toAccountId,
+      `Transfer of ${transaction.amount} from ${transaction.fromAccount.accountNumber}`,
+    );
   }
 
   private setupEventListeners() {

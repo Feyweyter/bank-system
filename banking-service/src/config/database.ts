@@ -2,7 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { logger } from "./logger";
 
 export const prisma = new PrismaClient({
-  log: ["query", "info", "warn", "error"],
+  log: ["query", "info", "warn", "error"], // enables different types of logging
 });
 
 export async function connectDatabase() {

@@ -21,6 +21,7 @@ async function startServer() {
 
     // Start worker
     const worker = new TransactionWorker(accountService, transactionRepo);
+    worker.start();
 
     app.listen(PORT, () => {
       logger.info(`Banking service started on port ${PORT}`);

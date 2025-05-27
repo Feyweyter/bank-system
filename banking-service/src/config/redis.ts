@@ -19,3 +19,7 @@ export async function connectRedis() {
     process.exit(1);
   }
 }
+
+export async function disconnectRedis() {
+  await redisClient.quit();
+}
